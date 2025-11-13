@@ -43,10 +43,15 @@ void draw() {
   for (int i = 0; i <10; i++) {
     for (int j = 0; j < 10; j++) {
     //PVector force = preys[j].attract(hunters[i]);
+  
+    hunters[i].findNearestPrey(preys);
     hunters[i].attract(preys[i]);
         preys[i].attract(hunters[i]);
         foods[i].attract(preys[i]);
-
+    if(j!=i){
+    
+      hunters[i].separate(hunters[j]);
+    }
     //PVector force = hunters[j].attract(preys[i]); 
     //preys[i].applyForce(force); 
     //PVector force = foods[i].attract(preys[i]); 
@@ -61,8 +66,10 @@ void draw() {
     foods[i].show();
       if (preys[i].position.x<0){
     //preys[i].velocity.mult(0);
-  preys[i].position.x=640;
-        preys[i].velocity.mult(0.5);
+  //preys[i].position.x=640;
+        //preys[i].velocity.mult(0.5);
+    preys[i]=null;
+        preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
 
   }
    if (preys[i].position.x>640){
@@ -75,16 +82,16 @@ void draw() {
      //preys[i].position.x=640;
   }
   if (preys[i].position.y<0){
-        preys[i].velocity.mult(0.5);
+        //preys[i].velocity.mult(0.5);
 
-  preys[i].position.y=360;
+  //preys[i].position.y=360;
    preys[i]=null;
         preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
   }
    if (preys[i].position.y>360){
-  preys[i].position.y=0;
+  //preys[i].position.y=0;
 
-      preys[i].velocity.mult(0.5);
+      //preys[i].velocity.mult(0.5);
        preys[i]=null;
         preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
       

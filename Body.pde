@@ -1,8 +1,10 @@
 class Body {
-  PVector position, velocity, acceleration,angle, angleVelocity, amplitude;
+  PVector position, velocity, acceleration,angle, angleVelocity, amplitude,spearateForce,sum;
   float mass, r, maxspeed, maxforce;
   
   Body(float x, float y, float m) {
+           //this.sum = new PVector();
+
     this.position = new PVector(x, y);
     this.velocity = new PVector(0, 0);
     this.acceleration = new PVector(0, 0);
@@ -12,11 +14,11 @@ class Body {
     this.amplitude = new PVector(
      random(0.1,mass*0.08),random(0.15,mass*0.09));
       //random(20, height / 2)
-    this.maxspeed=4;
-     this.maxforce= 0.1;
+    this.maxspeed=0.6;
+     this.maxforce= 0.007;
 
     
-    println( this.angleVelocity);
+    //println( this.angleVelocity);
     this.r = sqrt(this.mass) * 3;
   }
     void bounce(){
@@ -61,28 +63,40 @@ class Body {
     body.applyForce(force);
   }
  void findNearestPrey(Prey[] preys){
-   float minDist;
-   for(int i=0;i<10;i++){
+   float minDist=100;
+   int currentLowest=0;
+   //print(preys.length);
+   for(int i=0;i<preys.length;i++){
        float dst=PVector.dist(preys[i].position,this.position);
+       if(dst < minDist){
+           currentLowest =i;
+       }
        
    }
+   this.trace(preys[currentLowest].position);
+   
  }
   void applyForce(PVector force) {
     PVector f = PVector.div(force, this.mass);
+    this.acceleration.limit(maxspeed);
     this.acceleration.add(f);
+    this.acceleration.limit(maxspeed);
   }
 
   void trace(PVector target){
     PVector desired = PVector.sub(target, this.position); // A vector pointing from the location to the target
     float d = desired.mag();
     if (d < 100) {
-      float m = map(d, 0, 100, 0, this.maxspeed);
+      float m = map(d, 0.2, 100, 0.2, this.maxspeed);
       desired.setMag(m);
     } else {
       desired.setMag(this.maxspeed);
     }
   PVector steer = PVector.sub(desired, this.velocity);
-  this.acceleration.add(steer);
+   steer.limit(this.maxforce);
+   this.applyForce(steer);
+  //this.acceleration.add(steer);
+  //this.acceleration.limit(maxspeed);
   }
 
   void update() {
@@ -99,7 +113,51 @@ class Body {
     //this.position.add(oscilation);
     this.acceleration.set(0, 0);
   }
- 
+   void boundaries(int offset) {
+   PVector desired = null;
+       if (this.position.x < offset) {
+      desired = new PVector(this.maxspeed, this.velocity.y);
+    } else if (this.position.x > width - offset) {
+      desired = new PVector(-this.maxspeed, this.velocity.y);
+    }
+
+    if (this.position.y < offset) {
+      desired = new PVector(this.velocity.x, this.maxspeed);
+    } else if (this.position.y > height - offset) {
+      desired = new PVector(this.velocity.x, -this.maxspeed);
+    }
+
+    if (desired != null) {
+      desired.normalize();
+      desired.mult(this.maxspeed);
+      PVector steer = PVector.sub(desired, this.velocity);
+      steer.limit(this.maxforce);
+      this.applyForce(steer);
+    }
+   }
+   void separate(Body hunter){
+     float desiredSeparation = this.r * 4;
+       this.sum = new PVector();
+    int count = 0;
+     float d = PVector.dist(this.position, hunter.position);
+     //print(d);
+     if(d < desiredSeparation){
+       //print("dupa");
+        PVector diff = PVector.sub(this.position, hunter.position);
+        diff.setMag(2/d);
+        
+        this.sum.add(diff);
+         this.sum.setMag(this.maxspeed);
+          this.sum.sub(this.velocity);
+                this.sum.limit(this.maxforce);
+      PVector separateForce = this.sum;
+          separateForce.mult(15.5);
+      this.applyForce(separateForce);
+     }
+          //print(separateForce);
+
+    
+   }
   void show() {
     stroke(0);
     strokeWeight(2);

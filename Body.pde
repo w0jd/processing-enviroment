@@ -1,6 +1,9 @@
 class Body {
   PVector position, velocity, acceleration,angle, angleVelocity, amplitude,spearateForce,sum;
   float mass, r, maxspeed, maxforce;
+  //Body[] huntersParticles = new Body[10];
+  int maxLifetime=2000;
+  int lifeTime=maxLifetime;
   
   Body(float x, float y, float m) {
            //this.sum = new PVector();
@@ -27,6 +30,7 @@ class Body {
         //PVector vecx= new PVector(1,0);
         //PVector vecy= new PVector(0,1);
         ////float pos_x=vecx.cross(1,0);
+        print("dupa");
 
         if (position.x < 0) {
           position.x = 0;
@@ -79,6 +83,8 @@ class Body {
   void applyForce(PVector force) {
     PVector f = PVector.div(force, this.mass);
     this.acceleration.limit(maxspeed);
+
+    //f.limit(maxforce);
     this.acceleration.add(f);
     this.acceleration.limit(maxspeed);
   }
@@ -98,15 +104,27 @@ class Body {
   //this.acceleration.add(steer);
   //this.acceleration.limit(maxspeed);
   }
-
-  void update() {
+  void flow(FlowField flow) {
+    // What is the vector at that spot in the flow field?
+    PVector desired = flow.lookup(this.position);
+    // Scale it up by maxspeed
+    //desired.add(this.velocity);
+    desired.mult(this.maxspeed);
+    // Steering is desired minus velocity
+    PVector steer = PVector.sub(desired, this.velocity);
+    steer.limit(this.maxforce); // Limit to maximum steering force
+    this.applyForce(steer);
+  }
+  void update(FlowField flow) {
          this.angle.add(this.angleVelocity);
-
+    
     float x = sin(this.angle.x) * this.amplitude.x;
     float y = sin(this.angle.y) * this.amplitude.y;
     PVector oscilation;
     oscilation = new PVector (x,y);
-    
+    boundaries(20);
+    flow(flow);
+    lifeTime--;
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.maxspeed);
     this.position.add(this.velocity);
@@ -159,9 +177,20 @@ class Body {
     
    }
   void show() {
-    stroke(0);
-    strokeWeight(2);
+
     fill(227, 100,100);
-    circle(this.position.x, this.position.y, this.r * 4);
+     float angle = this.velocity.heading();
+       fill(227, 100,100, lifeTime/20);
+    stroke(1);
+    strokeWeight(2);
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(angle);
+    beginShape();
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
+    endShape(CLOSE);
+    pop();
   }
 }

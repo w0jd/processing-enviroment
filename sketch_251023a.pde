@@ -2,10 +2,13 @@ Body[] hunters = new Body[10];
 Prey[] preys = new Prey[10];
 Food[] foods = new Food[10];
 FlowField flowfield;
+FlowFieldCelluarAutomata cellAutoF;
 float G = 1;
 void setup() {
   size(1240, 660);
   flowfield = new FlowField(20);
+  cellAutoF = new FlowFieldCelluarAutomata(20,flowfield.riverStart,flowfield.riverEnd);
+  cellAutoF.init(250);
   for (int i = 0; i < 10; i++) {
     hunters[i] = new Body(random(width), random(height), random(2, 3));
       preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
@@ -14,6 +17,7 @@ void setup() {
 }
 void draw() {
   background(255);
+  cellAutoF.show(flowfield.riverStart,flowfield.riverEnd);
   flowfield.show();
   for (int i = 0; i <10; i++) {
     for (int j = 0; j < 10; j++) {
@@ -28,7 +32,7 @@ void draw() {
       
       foods[i]=null;
       foods[i]= new Food(random(width), random(height), random(1.1, 2.0));
-      preys[j].lifeTime=100;  
+      preys[j].lifeTime=preys[j].maxLifetime;  
   }
     PVector desiredPrey = PVector.sub(hunters[j].position, preys[i].position);
     float dP = desiredPrey.mag();
@@ -40,7 +44,7 @@ void draw() {
 
     }
     if(hunters[j].lifeTime==0){
-      print("zero");
+      //print("zero");
       hunters[j]=null;
          hunters[j] = new Body(random(width), random(height), random(2, 3));
     }

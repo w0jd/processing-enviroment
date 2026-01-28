@@ -95,7 +95,15 @@ void trace(PVector target, int currentLowest){
     this.applyForce(steer);
   }
 
-  void update(FlowField flow) {
+  void update(FlowField flow,FlowFieldCelluarAutomata automata) {
+    if(automata.lookup(this.position)==1){
+      this.maxspeed=this.maxSpeedNorm*10;
+    }else if(automata.lookup(this.position)==0) {
+      this.maxspeed=this.maxSpeedNorm;
+    }else{
+      this.maxspeed=maxSpeedRiver*0.1;
+    
+    }
     flow(flow);  
     this.angle.add(this.angleVelocity);
      lifeTime--;

@@ -7,8 +7,8 @@ float G = 1;
 void setup() {
   size(1240, 660);
   flowfield = new FlowField(20);
-  cellAutoF = new FlowFieldCelluarAutomata(20,flowfield.riverStart,flowfield.riverEnd);
-  cellAutoF.init(450);
+  cellAutoF = new FlowFieldCelluarAutomata(20,flowfield.riverStart,flowfield.riverEnd,flowfield.PerlinNoise);
+  cellAutoF.init(300);
   for (int i = 0; i < 10; i++) {
     hunters[i] = new Body(random(width), random(height), random(2, 3));
       preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
@@ -57,7 +57,7 @@ void draw() {
     }
     hunters[i].update(flowfield,cellAutoF);
     hunters[i].show();
-    preys[i].update(flowfield);
+    preys[i].update(flowfield,cellAutoF);
     preys[i].show();
     foods[i].show();
       if (preys[i].position.x<0){

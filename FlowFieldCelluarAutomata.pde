@@ -1,5 +1,7 @@
 class FlowFieldCelluarAutomata{
-  int resolution;
+  int resolution;  
+  float [][]PerlinNoise;
+
   int timer=400;
   int oldTimer=this.timer;
   int rows, cols;
@@ -8,11 +10,14 @@ class FlowFieldCelluarAutomata{
   int [][]fieldCopy2;
   int minNumOfNeigbours, maxNumOfNeigbours;
   int riverStart, riverEnd;
-    FlowFieldCelluarAutomata(int r, int start, int end) {
+    FlowFieldCelluarAutomata(int r, int start, int end, float [][] nosie) {
     this.resolution = r;
     //{!2} Determine the number of columns and rows.
     this.cols = width / this.resolution;
     this.rows = height / this.resolution;
+        this.PerlinNoise=new float[cols][rows];
+    arrayCopy(nosie,PerlinNoise);
+    //print(this.PerlinNoise[20][20]);
     this.riverStart = start;
     this.riverEnd=end;
     this.field = new int[cols][rows];
@@ -30,10 +35,10 @@ class FlowFieldCelluarAutomata{
          int  y=int(random(0,this.rows));
          this.field[x][y]=1;
        }
-       this.fieldCopy=this.field;
+       arrayCopy(this.field,this.fieldCopy);
     }
     void update(){
-     this.minNumOfNeigbours=int(random(3,5));
+     this.minNumOfNeigbours=int(random(3,4));
      this.maxNumOfNeigbours=int(random(5,8));
   //      print("\n");
 
@@ -67,11 +72,11 @@ class FlowFieldCelluarAutomata{
 
              }
              if((x>=this.riverStart && x<this.riverEnd)){
-               print("\n");
-               print(riverStart);
-               print("\n");
-               print(x);
-               print("\n");
+               //print("\n");
+               //print(riverStart);
+               //print("\n");
+               //print(x);
+               //print("\n");
                 this.field[x][y]=2;
 
            }
@@ -79,7 +84,7 @@ class FlowFieldCelluarAutomata{
           //print("\n");
     }
               //print("\n");
-              arrayCopy(this.fieldCopy, this.field);
+              arrayCopy( this.field,this.fieldCopy);
               //this.fieldCopy2=this.fieldCopy;
 
     }
@@ -108,19 +113,25 @@ class FlowFieldCelluarAutomata{
         float h = height / this.rows;
         int v = this.field[i][j];
         float x = i * w;
+        int r,g,b;
         float  y = j * h;
         if (v==1){
+         g= int(map(this.PerlinNoise[i][j],0,1,90,255));
         //v.setMag(w * 0.5);
         strokeWeight(0);
-         fill(50, 230,50);
+         fill(50, g,50);
         square(x,y,w);
         }else if(v==0){
         strokeWeight(0);
-         fill(255,255,255);
+                 g= int(map(this.PerlinNoise[i][j],0,1,150,255));
+
+         fill(g,g,0);
         square(x,y,w);
         }else{
         strokeWeight(0);
-         fill(25,55,255);
+                 b= int(map(this.PerlinNoise[i][j],0,1,130,255));
+
+         fill(25,55,b);
         square(x,y,w);
         
         }

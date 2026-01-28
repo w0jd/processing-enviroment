@@ -17,10 +17,10 @@ class Body {
     this.amplitude = new PVector(
      random(0.1,mass*0.08),random(0.15,mass*0.09));
       //random(20, height / 2)
-    this.maxspeed=0.6;
+    this.maxspeed=0.8;
      this.maxforce= 0.007;
     this.maxSpeedN=this.maxspeed;
-    this.maxspeedF=this.maxspeed*0.7;
+    this.maxspeedF=this.maxspeed*0.4;
     
     //println( this.angleVelocity);
     this.r = sqrt(this.mass) * 3;
@@ -123,12 +123,12 @@ class Body {
     float x = sin(this.angle.x) * this.amplitude.x;
     float y = sin(this.angle.y) * this.amplitude.y;
     PVector oscilation;
-    if(automata.lookup(position)==1){
-      this.maxspeed=maxspeedF;
-    }else if(automata.lookup(position)==0) {
-      this.maxspeed=maxSpeedN;
+    if(automata.lookup(this.position)==1){
+      this.maxspeed=this.maxspeedF;
+    }else if(automata.lookup(this.position)==0) {
+      this.maxspeed=this.maxSpeedN;
     }else{
-      this.maxspeed=maxspeedF*10;
+      this.maxspeed=this.maxspeedF*10;
     
     }
     oscilation = new PVector (x,y);

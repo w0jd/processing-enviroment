@@ -6,7 +6,7 @@ class FlowField {
   int riverStart;
   int riverEnd;
   int hillStart, hillEnd, hillHeight, hillHeightEnd;
-  
+  float [][]PerlinNoise;
   FlowField(int r) {
     this.resolution = r;
     //{!2} Determine the number of columns and rows.
@@ -16,7 +16,8 @@ class FlowField {
     riverStart= int(random(0,int(cols)-5));
     riverEnd=riverStart+10;
               //print(riverStart);
-    //hillStart
+    this.PerlinNoise=new float[cols][rows];
+
     this.field = new PVector[cols][rows];
      hillHeight=int(random(0,rows-10));
         if(riverEnd<=19){
@@ -37,10 +38,12 @@ class FlowField {
       float yoff = 0;
       for (int j = 0; j < this.rows; j++) {
         //{.code-wide} In this example, use Perlin noise to create the vectors.
-        float angle = map(noise(xoff, yoff), 0, 1, 0, TWO_PI);
+          this.PerlinNoise[i][j]=noise(xoff, yoff);
+        //print(this.PerlinNoise[0][0]);
+        float angle = map(this.PerlinNoise[i][j], 0, 1, 0, TWO_PI);
         if(i>=riverStart && i<=riverEnd)
         {
-          angle=map(noise(xoff, yoff), 0, 1, 0, PI);
+          angle=map(PerlinNoise[i][j], 0, 1, 0, PI);
           //print(riverStart);
           
         }

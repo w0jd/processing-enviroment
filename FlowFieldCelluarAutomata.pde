@@ -1,10 +1,11 @@
 class FlowFieldCelluarAutomata{
   int resolution;
-  int timer=100;
+  int timer=400;
   int oldTimer=this.timer;
   int rows, cols;
   int [][]field;
   int [][]fieldCopy;
+  int [][]fieldCopy2;
   int minNumOfNeigbours, maxNumOfNeigbours;
   int riverStart, riverEnd;
     FlowFieldCelluarAutomata(int r, int start, int end) {
@@ -16,6 +17,7 @@ class FlowFieldCelluarAutomata{
     this.riverEnd=end;
     this.field = new int[cols][rows];
     this.fieldCopy = new int[cols][rows];
+    this.fieldCopy2 = new int[cols][rows];
   
     }
     void init(int num){
@@ -33,12 +35,12 @@ class FlowFieldCelluarAutomata{
     void update(){
      this.minNumOfNeigbours=int(random(3,5));
      this.maxNumOfNeigbours=int(random(5,8));
-        print("\n");
+  //      print("\n");
 
-     print(minNumOfNeigbours);
-        print("\n");
-  print(maxNumOfNeigbours);
-        print("\n");
+  //   print(minNumOfNeigbours);
+  //      print("\n");
+  //print(maxNumOfNeigbours);
+  //      print("\n");
      
           int count =0;
  for (int x = 0; x < cols; x++) {
@@ -57,33 +59,44 @@ class FlowFieldCelluarAutomata{
         }
       }
     }
-             print(this.field[x][y]);
+             //print(this.field[x][y]);
                 if((count>=this.minNumOfNeigbours && count<=this.maxNumOfNeigbours) && (x<this.riverStart || x>this.riverEnd) ){
                  this.field[x][y]=1;
              }else{
                  this.field[x][y]=0;
 
              }
-             
+             if((x>=this.riverStart && x<this.riverEnd)){
+               print("\n");
+               print(riverStart);
+               print("\n");
+               print(x);
+               print("\n");
+                this.field[x][y]=2;
+
+           }
       }
-          print("\n");
+          //print("\n");
     }
-              print("\n");
-              this.fieldCopy=this.field;
+              //print("\n");
+              arrayCopy(this.fieldCopy, this.field);
+              //this.fieldCopy2=this.fieldCopy;
 
     }
     int lookup(PVector position) {
     int column = constrain(floor(position.x / this.resolution), 0, this.cols - 1);
     int row = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
-    return this.field[column][row];
+    //print(this.fieldCopy[column][row]);
+   return this.fieldCopy[column][row];
+    //return this.field[column][row];
   }
     void show(int riverStart,int riverEnd) {
     this.riverStart=riverStart;
     this.riverEnd=riverEnd;
       if(this.timer>0){
     this.timer--;
-    print(timer);
-    print("\n");
+    //print(timer);
+    //print("\n");
     }  else{
     this.update();
     this.timer=this.oldTimer;  
@@ -98,13 +111,18 @@ class FlowFieldCelluarAutomata{
         float  y = j * h;
         if (v==1){
         //v.setMag(w * 0.5);
+        strokeWeight(0);
          fill(50, 230,50);
         square(x,y,w);
+        }else if(v==0){
         strokeWeight(0);
-        }else{
          fill(255,255,255);
         square(x,y,w);
+        }else{
         strokeWeight(0);
+         fill(25,55,255);
+        square(x,y,w);
+        
         }
         //line(x, y, x + v.x, y + v.y);
       }

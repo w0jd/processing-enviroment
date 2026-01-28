@@ -1,11 +1,11 @@
 class Prey {
   PVector position, velocity, acceleration,angle, angleVelocity, amplitude;
-  float mass, r,maxspeed, maxforce;
+  float mass, r,maxspeed, maxforce,maxSpeedRiver,maxSpeedNorm,maxforceN,maxforceR;
   int i;
     int maxLifetime=2000;
   int lifeTime=maxLifetime;
     //int maxTail = 10; 
-    ArrayList<PVector> preyTail = new ArrayList<PVector>();
+    //ArrayList<PVector> preyTail = new ArrayList<PVector>();
   Prey(float x, float y, float m) {
     this.position = new PVector(x, y);
     this.velocity = new PVector(0, 0);
@@ -19,7 +19,12 @@ class Prey {
       this.angleVelocity = new PVector(random(-0.03, 0.03), random(-0.03, 0.03));
     this.amplitude = new PVector(
      random(0.1,mass*0.2),random(0.15,mass*0.3)  );
-  }
+    this.maxSpeedNorm=this.maxspeed;
+    this.maxforceN=this.maxforce;
+    this.maxforceR=this.maxforce*4;
+    this.maxSpeedRiver=  this.maxSpeedNorm*2;
+    
+}
   
   void attract(Body body) {
     PVector force = PVector.sub(this.position, body.position);
@@ -74,6 +79,16 @@ void trace(PVector target, int currentLowest){
     // Scale it up by maxspeed
     //desired.add(this.velocity);
     desired.mult(this.maxspeed*0.5);
+    if (this.position.x>=flow.riverStart&&this.position.x<=flow.riverEnd){
+      //desired.mult(this.maxspeed*2.5);
+      this.maxspeed=maxSpeedRiver*2;
+      this.maxforce=maxforceR;
+      
+    }else{
+      this.maxspeed=maxSpeedNorm;
+      this.maxforce=maxforceN;
+    
+    }
     // Steering is desired minus velocity
     PVector steer = PVector.sub(desired, this.velocity);
     steer.limit(this.maxforce); // Limit to maximum steering force

@@ -8,7 +8,7 @@ void setup() {
   size(1240, 660);
   flowfield = new FlowField(20);
   cellAutoF = new FlowFieldCelluarAutomata(20,flowfield.riverStart,flowfield.riverEnd);
-  cellAutoF.init(250);
+  cellAutoF.init(450);
   for (int i = 0; i < 10; i++) {
     hunters[i] = new Body(random(width), random(height), random(2, 3));
       preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
@@ -55,7 +55,7 @@ void draw() {
     if(j!=i){
       hunters[i].separate(hunters[j]);
     }
-    hunters[i].update(flowfield);
+    hunters[i].update(flowfield,cellAutoF);
     hunters[i].show();
     preys[i].update(flowfield);
     preys[i].show();

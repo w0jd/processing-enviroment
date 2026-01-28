@@ -1,8 +1,8 @@
 class Body {
   PVector position, velocity, acceleration,angle, angleVelocity, amplitude,spearateForce,sum;
-  float mass, r, maxspeed, maxforce;
+  float mass, r, maxspeed, maxforce,maxspeedF,maxSpeedN;
   //Body[] huntersParticles = new Body[10];
-  int maxLifetime=2000;
+  int maxLifetime=20000;
   int lifeTime=maxLifetime;
   
   Body(float x, float y, float m) {
@@ -19,7 +19,8 @@ class Body {
       //random(20, height / 2)
     this.maxspeed=0.6;
      this.maxforce= 0.007;
-
+    this.maxSpeedN=this.maxspeed;
+    this.maxspeedF=this.maxspeed*0.7;
     
     //println( this.angleVelocity);
     this.r = sqrt(this.mass) * 3;
@@ -30,7 +31,7 @@ class Body {
         //PVector vecx= new PVector(1,0);
         //PVector vecy= new PVector(0,1);
         ////float pos_x=vecx.cross(1,0);
-        print("dupa");
+        //print("dupa");
 
         if (position.x < 0) {
           position.x = 0;
@@ -107,6 +108,7 @@ class Body {
   void flow(FlowField flow) {
     // What is the vector at that spot in the flow field?
     PVector desired = flow.lookup(this.position);
+    //int ground=
     // Scale it up by maxspeed
     //desired.add(this.velocity);
     desired.mult(this.maxspeed);
@@ -115,12 +117,20 @@ class Body {
     steer.limit(this.maxforce); // Limit to maximum steering force
     this.applyForce(steer);
   }
-  void update(FlowField flow) {
+  void update(FlowField flow,FlowFieldCelluarAutomata automata) {
          this.angle.add(this.angleVelocity);
     
     float x = sin(this.angle.x) * this.amplitude.x;
     float y = sin(this.angle.y) * this.amplitude.y;
     PVector oscilation;
+    if(automata.lookup(position)==1){
+      this.maxspeed=maxspeedF;
+    }else if(automata.lookup(position)==0) {
+      this.maxspeed=maxSpeedN;
+    }else{
+      this.maxspeed=maxspeedF*10;
+    
+    }
     oscilation = new PVector (x,y);
     boundaries(20);
     flow(flow);
@@ -180,7 +190,7 @@ class Body {
 
     fill(227, 100,100);
      float angle = this.velocity.heading();
-       fill(227, 100,100, lifeTime/20);
+       fill(227, 100,100, lifeTime/200);
     stroke(1);
     strokeWeight(2);
     push();

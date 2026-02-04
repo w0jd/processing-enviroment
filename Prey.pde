@@ -3,7 +3,7 @@ class Prey {
   float mass, r,maxspeed, maxforce,maxSpeedRiver,maxSpeedNorm,maxforceN,maxforceR;
   int i;
     int maxLifetime=2000;
-  int lifeTime=maxLifetime;
+  int lifeTime=0;
     //int maxTail = 10; 
     //ArrayList<PVector> preyTail = new ArrayList<PVector>();
   Prey(float x, float y, float m) {
@@ -106,7 +106,7 @@ void trace(PVector target, int currentLowest){
     }
     flow(flow);  
     this.angle.add(this.angleVelocity);
-     lifeTime--;
+     //lifeTime--;
     float x = sin(this.angle.x) * this.amplitude.x;
     float y = sin(this.angle.y) * this.amplitude.y;
     PVector oscilation;
@@ -115,6 +115,9 @@ void trace(PVector target, int currentLowest){
         this.position.add(oscilation);
     this.position.add(this.velocity);
     this.acceleration.set(0, 0);
+    lifeTime++;
+    float slowness= (lifeTime/100)+1;
+    this.maxSpeedNorm=this.maxSpeedNorm/slowness;
     //preyTail.add(0, position.copy());
      //if (preyTail.size() > maxTail) {
     //preyTail.remove(preyTail.size() - 1); // usuń najstarszy
@@ -144,37 +147,37 @@ void trace(PVector target, int currentLowest){
       this.applyForce(steer);
     }
    }
-  void bounce(){
-        this.velocity.add(this.acceleration);
-        if (position.x < 0) {
-    position.x = 0;
-    velocity.x *= -0.5;
-  } else if (position.x > width) {
-    position.x = width;
-    velocity.x *= -0.5;
-  }
+  //void bounce(){
+  //      this.velocity.add(this.acceleration);
+  //      if (position.x < 0) {
+  //  position.x = 0;
+  //  velocity.x *= -0.5;
+  //} else if (position.x > width) {
+  //  position.x = width;
+  //  velocity.x *= -0.5;
+  //}
 
-  // Odbicie od góry/dołu
-  if (position.y < 0) {
-    position.y = 0;
-    velocity.y *= -0.5;
-  } else if (position.y > height) {
-    position.y = height;
-    velocity.y *= -0.5;
-  }
+  //// Odbicie od góry/dołu
+  //if (position.y < 0) {
+  //  position.y = 0;
+  //  velocity.y *= -0.5;
+  //} else if (position.y > height) {
+  //  position.y = height;
+  //  velocity.y *= -0.5;
+  //}
         //float pos_y=vecx.cross(0,1);
     //this.velocity.rotate(PI*3);    
 
 
-    this.position.add(this.velocity);
+    //this.position.add(this.velocity);
     
-    this.acceleration.set(0, 0);
+    //this.acceleration.set(0, 0);
   
-  }
+  //}
   void show() {
     stroke(0);
     strokeWeight(2);
-    fill(127, lifeTime/20);
+    fill(127, 100);
   
     
     circle(this.position.x, this.position.y, this.r * 4);

@@ -32,7 +32,7 @@ void draw() {
       
       foods[i]=null;
       foods[i]= new Food(random(width), random(height), random(1.1, 2.0));
-      preys[j].lifeTime=preys[j].maxLifetime;  
+      //preys[j].lifeTime=preys[j].maxLifetime;  
   }
     PVector desiredPrey = PVector.sub(hunters[j].position, preys[i].position);
     float dP = desiredPrey.mag();
@@ -40,17 +40,17 @@ void draw() {
     {
       preys[i]=null;
             preys[i] = new Prey(random(width), random(height), random(1.5, 2.5));
-            hunters[j].lifeTime=hunters[j].maxLifetime;
+            //hunters[j].lifeTime=hunters[j].maxLifetime;
 
     }
     if(hunters[j].lifeTime==0){
       //print("zero");
-      hunters[j]=null;
-         hunters[j] = new Body(random(width), random(height), random(2, 3));
+      //hunters[j]=null;
+      //   hunters[j] = new Body(random(width), random(height), random(2, 3));
     }
         if(preys[j].lifeTime==0){
-      preys[j]=null;
-         preys[j] = new Prey(random(width), random(height), random(2, 3));
+      //preys[j]=null;
+      //   preys[j] = new Prey(random(width), random(height), random(2, 3));
     }
     if(j!=i){
       hunters[i].separate(hunters[j]);

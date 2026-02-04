@@ -38,7 +38,7 @@ class FlowFieldCelluarAutomata{
        arrayCopy(this.field,this.fieldCopy);
     }
     void update(){
-     this.minNumOfNeigbours=int(random(3,4));
+     this.minNumOfNeigbours=int(random(3,5));
      this.maxNumOfNeigbours=int(random(5,8));
   //      print("\n");
 

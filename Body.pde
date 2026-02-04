@@ -134,7 +134,7 @@ class Body {
     oscilation = new PVector (x,y);
     boundaries(20);
     flow(flow);
-    lifeTime--;
+    //lifeTime--;
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.maxspeed);
     this.position.add(this.velocity);
